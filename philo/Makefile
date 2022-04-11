@@ -6,7 +6,7 @@
 #    By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/11 15:31:56 by mmeising          #+#    #+#              #
-#    Updated: 2022/04/11 15:42:22 by mmeising         ###   ########.fr        #
+#    Updated: 2022/04/11 17:18:13 by mmeising         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ CC := gcc
 CFLAGS := -Wall -Wextra -Werror
 
 SRCS :=	\
-	main.c
+	main.c utils.c
 
 OBJ := $(SRCS:%.c=%.o)
 
