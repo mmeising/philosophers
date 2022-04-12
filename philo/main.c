@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 15:31:38 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/11 21:08:41 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/12 19:58:04 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,26 +18,17 @@
  */
 int	init(t_data *data, int argc, char **argv)
 {
+	data->err_code = NO_ERROR; 
 	if (argc != 5)
-	{
-		printf("usage (time in ms): ./philo num_of_philo time_to_die ");
-		printf("time_to_eat time_to_sleep\n");
-		return (1);
-	}
+		return (err_handle(data, WRONG_ARGC));
 	data->philo_count = ft_atoi(argv[1]);
 	data->die_t = ft_atoi(argv[2]);
 	data->eat_t = ft_atoi(argv[3]);
 	data->sleep_t = ft_atoi(argv[4]);
 	if (data->die_t <= 0 || data->eat_t <= 0 || data->sleep_t <= 0)
-	{
-		printf("time must be a positive integer\n");
-		return (1);
-	}
+		return (err_handle(data, TIME_NOT_POSITIVE));
 	if (data->philo_count < 1 || data->philo_count > 200)
-	{
-		printf("num_of_philo must be from 1 to 200\n");
-		return (1);
-	}
+		return (err_handle(data, WRONG_PHILO_COUNT));
 	data->wait_for_start = 1;
 	return (0);
 }
@@ -67,11 +58,11 @@ int	create_threads(pthread_t **threads, int philo_count, t_data *data)
 	i = 0;
 	*threads = malloc(sizeof(**threads) * philo_count);
 	if (*threads == NULL)
-		return (1);
+		return (err_handle(data, MALLOC_FAILED));
 	while (i < philo_count)
 	{
 		if (pthread_create(&(*threads)[i], NULL, &routine, data))
-			return (2);
+			return (err_handle(data, FAILED_CREATE_THREADS));
 		i++;
 	}
 	i = 0;
@@ -82,7 +73,7 @@ int	create_forks(t_data *data)
 {
 	data->forks = malloc(sizeof(*data->forks) * data->philo_count);
 	if (data->forks == NULL)
-		return (1);
+		return (err_handle(data, MALLOC_FAILED));
 	memset(data->forks, 0, sizeof(*(data->forks)) * data->philo_count);
 	return (0);
 }
@@ -95,28 +86,24 @@ int	main(int argc, char **argv)
 
 	threads = NULL;
 	if (init(&data, argc, argv) != 0)
-		return (1);
+		return (data.err_code);
 	// printf("count: %i\ndie: %i\neat: %i\nsleep: %i\n", data.philo_count, data.die_t, data.eat_t, data.sleep_t);
 	if (create_forks(&data) != 0)
-		return (2);
+		return (data.err_code);
 	while (i < data.philo_count)
 	{
 		printf("%d %d\n", i, data.forks[i]);
 		i++;
 	}
 	if (create_threads(&threads, data.philo_count, &data) != 0)
-	{
-		printf("failed to create threads\n");
-		return (3);
-	}
-	// sleep(2);
+		return (data.err_code);
 	data.wait_for_start = 0;
 	i = 0;
 	while (i < data.philo_count)
 	{
 		printf("test 1\n");
 		if (pthread_join(threads[i], NULL) != 0)
-			return (3);
+			return (err_handle(&data, FAILED_PTHREAD_JOIN));
 		printf("test 2\n");
 		i++;
 	}
