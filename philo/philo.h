@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 15:32:31 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/14 19:30:11 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/14 20:21:11 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <string.h>
 # include <sys/time.h>
 # include <pthread.h>
+# include <stdbool.h>
 
 typedef enum	e_error
 {
@@ -49,7 +50,7 @@ typedef struct	s_data
 	int			die_t;
 	int			eat_t;
 	int			sleep_t;
-	int			wait_for_start;
+	bool		wait_for_start;
 	int			*forks;
 	pthread_t	*thread_id;
 	t_error		err_code;

@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 15:31:38 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/14 19:50:07 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/14 20:26:49 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	init(t_data *data, int argc, char **argv)
 		return (err_handle(data, TIME_NOT_POSITIVE));
 	if (data->philo_count < 1 || data->philo_count > 200)
 		return (err_handle(data, WRONG_PHILO_COUNT));
-	data->wait_for_start = 1;
+	data->wait_for_start = true;
 	data->thread_id = malloc(sizeof(int) * data->philo_count);
 	if (data->thread_id == NULL)
 		return (err_handle(data, MALLOC_FAILED));
@@ -42,14 +42,14 @@ void	*routine(void *arg)
 
 	data = (t_data *)arg;
 	// printf("data philo count: %i\n", data->philo_count);
-	printf("waiting...\n");
-	printf("waitforstart: %i\n", data->wait_for_start);
-	while (data->wait_for_start)
+	// printf("waiting...\n");
+	// printf("waitforstart: %i\n", data->wait_for_start);
+	while (data->wait_for_start == true)
 	{
 		// printf("waitforstart: %i\n", data->wait_for_start);
 		usleep(100);
 	}
-	printf("finished waiting\n");
+	// printf("finished waiting\n");
 	return (0);
 }
 
@@ -83,12 +83,6 @@ int	create_threads(int philo_count, t_data *data)
 	while (i < philo_count)
 	{
 		init_philo(&philo, &data, i, philo_count);
-		// philo->fork_l = data->forks[i];
-		// if (i < philo_count - 1)
-		// 	philo->fork_r = data->forks[i + 1];
-		// else
-		// 	philo->fork_r = data->forks[0];
-		// philo->philo_num = i + 1;
 		if (pthread_create(&(data->thread_id[i]), NULL, &routine, philo))
 			return (err_handle(data, FAILED_CREATE_THREADS));
 		i++;
@@ -109,30 +103,26 @@ int	create_forks(t_data *data)
 
 int	main(int argc, char **argv)
 {
-	t_data		data;
+	t_data		*data;
 	pthread_t	*threads;
 	int			i;
 
 	threads = NULL;
-	if (init(&data, argc, argv) != 0)
-		return (data.err_code);
-	if (create_forks(&data) != 0)
-		return (data.err_code);
-	// while (i < data.philo_count)
-	// {
-	// 	printf("%d %d\n", i, data.forks[i]);
-	// 	i++;
-	// }
-	if (create_threads(data.philo_count, &data) != 0)
-		return (data.err_code);
-	printf("before: %i\n", data.wait_for_start);
-	data.wait_for_start = 0;
+	data = malloc(sizeof(*data));
+	if (data == NULL)
+		return (err_handle(data, MALLOC_FAILED));
+	if (init(data, argc, argv) != 0)
+		return (data->err_code);
+	if (create_forks(data) != 0)
+		return (data->err_code);
+	if (create_threads(data->philo_count, data) != 0)
+		return (data->err_code);
+	data->wait_for_start = false;
 	i = 0;
-	while (i < data.philo_count)
+	while (i < data->philo_count)
 	{
-		printf("after: %i\n", data.wait_for_start);
-		if (pthread_join(data.thread_id[i], NULL) != 0)
-			return (err_handle(&data, FAILED_PTHREAD_JOIN));
+		if (pthread_join(data->thread_id[i], NULL) != 0)
+			return (err_handle(data, FAILED_PTHREAD_JOIN));
 		i++;
 	}
 	return (0);
