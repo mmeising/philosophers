@@ -6,15 +6,15 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/14 21:08:32 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/14 21:11:37 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/14 21:29:34 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
 /*
- *	copies arguments provided via argv into t_data struct.
- *	returns 1 if input is illegal, otherwise returns 0.
+ *	copies arguments provided via argv into t_data struct,
+ *	sets waiting bool, malloc's pointers in data struct.
  */
 int	init_data(t_data *data, int argc, char **argv)
 {
@@ -29,13 +29,20 @@ int	init_data(t_data *data, int argc, char **argv)
 		return (err_handle(data, TIME_NOT_POSITIVE));
 	if (data->philo_count < 1 || data->philo_count > 200)
 		return (err_handle(data, WRONG_PHILO_COUNT));
-	data->wait_for_start = true;
 	data->thread_id = malloc(sizeof(int) * data->philo_count);
 	if (data->thread_id == NULL)
 		return (err_handle(data, MALLOC_FAILED));
+	data->forks = malloc(sizeof(*data->forks) * data->philo_count);
+	if (data->forks == NULL)
+		return (err_handle(data, MALLOC_FAILED));
+	memset(data->forks, 0, sizeof(*(data->forks)) * data->philo_count);
+	data->wait_for_start = true;
 	return (0);
 }
 
+/*
+ *	initializes mutex locks for forks and each philosopher's time.
+ */
 int	init_mutex(t_data *data)
 {
 	int	i;
@@ -54,19 +61,8 @@ int	init_mutex(t_data *data)
 	return (0);
 }
 
-int	init_forks(t_data *data)
-{
-	data->forks = malloc(sizeof(*data->forks) * data->philo_count);
-	if (data->forks == NULL)
-		return (err_handle(data, MALLOC_FAILED));
-	memset(data->forks, 0, sizeof(*(data->forks)) * data->philo_count);
-	return (0);
-}
-
 /*
  *	creates the threads, one for each philosopher.
- *	assigns the forks.
- *	creates the mutex for each philosopher's time.
  */
 int	init_threads(int philo_count, t_data *data)
 {
@@ -91,6 +87,9 @@ int	init_threads(int philo_count, t_data *data)
 	return (0);
 }
 
+/*
+ *	sets the fork pointers of each philosopher to the forks next to them.
+ */
 void	init_philo(t_philo **philo, t_data **data, int i, int philo_count)
 {
 	(*philo)->fork_l = &(*data)->forks[i];

@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 15:31:38 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/14 21:11:16 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/14 21:23:15 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,6 @@ int	main(int argc, char **argv)
 	if (init_data(data, argc, argv) != 0)
 		return (data->err_code);
 	if (init_mutex(data) != 0)
-		return (data->err_code);
-	if (init_forks(data) != 0)
 		return (data->err_code);
 	if (init_threads(data->philo_count, data) != 0)
 		return (data->err_code);

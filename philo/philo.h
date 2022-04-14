@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 15:32:31 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/14 21:11:42 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/14 21:23:06 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ void	*routine(void *arg);
 //		INITS
 int	init_data(t_data *data, int argc, char **argv);
 int	init_mutex(t_data *data);
-int	init_forks(t_data *data);
 int	init_threads(int philo_count, t_data *data);
 void	init_philo(t_philo **philo, t_data **data, int i, int philo_count);
 
