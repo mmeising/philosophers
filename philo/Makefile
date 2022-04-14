@@ -6,7 +6,7 @@
 #    By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/11 15:31:56 by mmeising          #+#    #+#              #
-#    Updated: 2022/04/11 17:18:13 by mmeising         ###   ########.fr        #
+#    Updated: 2022/04/14 19:46:11 by mmeising         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -56,5 +56,12 @@ fclean: clean
 	@echo Cleaned library file!
 
 re: fclean all
+
+test: all
+	./philo 3 10 10 10
+
+debug:
+	$(CC) -g $(CFLAGS) $(HEADER_FLAGS) $(SRCS) -o $(NAME)
+	lldb $(NAME) 3 10 10 10
 
 .PHONY: all clean fclean re

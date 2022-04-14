@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 15:31:38 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/12 19:58:04 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/14 19:50:07 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,9 @@ int	init(t_data *data, int argc, char **argv)
 	if (data->philo_count < 1 || data->philo_count > 200)
 		return (err_handle(data, WRONG_PHILO_COUNT));
 	data->wait_for_start = 1;
+	data->thread_id = malloc(sizeof(int) * data->philo_count);
+	if (data->thread_id == NULL)
+		return (err_handle(data, MALLOC_FAILED));
 	return (0);
 }
 
@@ -40,28 +43,53 @@ void	*routine(void *arg)
 	data = (t_data *)arg;
 	// printf("data philo count: %i\n", data->philo_count);
 	printf("waiting...\n");
+	printf("waitforstart: %i\n", data->wait_for_start);
 	while (data->wait_for_start)
-		continue ;
+	{
+		// printf("waitforstart: %i\n", data->wait_for_start);
+		usleep(100);
+	}
 	printf("finished waiting\n");
 	return (0);
 }
 
+void	init_philo(t_philo **philo, t_data **data, int i, int philo_count)
+{
+	(*philo)->fork_l = &(*data)->forks[i];
+	if (i < philo_count - 1)
+		(*philo)->fork_r = &(*data)->forks[i + 1];
+	else
+		(*philo)->fork_r = &(*data)->forks[0];
+	(*philo)->philo_num = i + 1;
+}
+
 /*
  *	creates the threads, one for each philosopher.
- *	creates the forks, including their mutexes.
+ *	assigns the forks.
  *	creates the mutex for each philosopher's time.
  */
-int	create_threads(pthread_t **threads, int philo_count, t_data *data)
+int	create_threads(int philo_count, t_data *data)
 {
-	int	i;
+	t_philo		*philo;
+	int			i;
 
 	i = 0;
-	*threads = malloc(sizeof(**threads) * philo_count);
-	if (*threads == NULL)
+	philo = malloc(sizeof(*philo));
+	data->forks = malloc(data->philo_count);
+	if (data->forks == NULL || philo == NULL)
 		return (err_handle(data, MALLOC_FAILED));
+	philo->data = data;
+	philo->status = IDLE;
 	while (i < philo_count)
 	{
-		if (pthread_create(&(*threads)[i], NULL, &routine, data))
+		init_philo(&philo, &data, i, philo_count);
+		// philo->fork_l = data->forks[i];
+		// if (i < philo_count - 1)
+		// 	philo->fork_r = data->forks[i + 1];
+		// else
+		// 	philo->fork_r = data->forks[0];
+		// philo->philo_num = i + 1;
+		if (pthread_create(&(data->thread_id[i]), NULL, &routine, philo))
 			return (err_handle(data, FAILED_CREATE_THREADS));
 		i++;
 	}
@@ -69,6 +97,7 @@ int	create_threads(pthread_t **threads, int philo_count, t_data *data)
 	return (0);
 }
 
+//	TO-DO: create mutexes too
 int	create_forks(t_data *data)
 {
 	data->forks = malloc(sizeof(*data->forks) * data->philo_count);
@@ -82,29 +111,28 @@ int	main(int argc, char **argv)
 {
 	t_data		data;
 	pthread_t	*threads;
-	int	i = 0;
+	int			i;
 
 	threads = NULL;
 	if (init(&data, argc, argv) != 0)
 		return (data.err_code);
-	// printf("count: %i\ndie: %i\neat: %i\nsleep: %i\n", data.philo_count, data.die_t, data.eat_t, data.sleep_t);
 	if (create_forks(&data) != 0)
 		return (data.err_code);
-	while (i < data.philo_count)
-	{
-		printf("%d %d\n", i, data.forks[i]);
-		i++;
-	}
-	if (create_threads(&threads, data.philo_count, &data) != 0)
+	// while (i < data.philo_count)
+	// {
+	// 	printf("%d %d\n", i, data.forks[i]);
+	// 	i++;
+	// }
+	if (create_threads(data.philo_count, &data) != 0)
 		return (data.err_code);
+	printf("before: %i\n", data.wait_for_start);
 	data.wait_for_start = 0;
 	i = 0;
 	while (i < data.philo_count)
 	{
-		printf("test 1\n");
-		if (pthread_join(threads[i], NULL) != 0)
+		printf("after: %i\n", data.wait_for_start);
+		if (pthread_join(data.thread_id[i], NULL) != 0)
 			return (err_handle(&data, FAILED_PTHREAD_JOIN));
-		printf("test 2\n");
 		i++;
 	}
 	return (0);
