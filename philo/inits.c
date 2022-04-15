@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/14 21:08:32 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/14 21:29:34 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/16 00:40:23 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,15 +70,16 @@ int	init_threads(int philo_count, t_data *data)
 	int			i;
 
 	i = 0;
-	philo = malloc(sizeof(*philo));
-	data->forks = malloc(data->philo_count);
-	if (data->forks == NULL || philo == NULL)
-		return (err_handle(data, MALLOC_FAILED));
-	philo->data = data;
-	philo->status = IDLE;
+	// philo = malloc(sizeof(*philo));
+	// data->forks = malloc(data->philo_count);
+	// if (data->forks == NULL || philo == NULL)
+	// 	return (err_handle(data, MALLOC_FAILED));
+	// philo->data = data;
+	// philo->status = IDLE;
 	while (i < philo_count)
 	{
-		init_philo(&philo, &data, i, philo_count);
+		if (init_philo(&philo, &data, i, philo_count) != 0)
+			return (data->err_code);
 		if (pthread_create(&(data->thread_id[i]), NULL, &routine, philo))
 			return (err_handle(data, FAILED_CREATE_THREADS));
 		i++;
@@ -90,12 +91,21 @@ int	init_threads(int philo_count, t_data *data)
 /*
  *	sets the fork pointers of each philosopher to the forks next to them.
  */
-void	init_philo(t_philo **philo, t_data **data, int i, int philo_count)
+int	init_philo(t_philo **philo, t_data **data, int i, int philo_count)
 {
+	*philo = malloc(sizeof(**philo));
+	// printf("philo count is: %i\n", (*data)->philo_count);
+	(*data)->forks = malloc((*data)->philo_count);
+	if ((*data)->forks == NULL || *philo == NULL)
+		return (err_handle(*data, MALLOC_FAILED));
+	(*philo)->data = *data;
+	(*philo)->status = IDLE;
 	(*philo)->fork_l = &(*data)->forks[i];
 	if (i < philo_count - 1)
 		(*philo)->fork_r = &(*data)->forks[i + 1];
 	else
 		(*philo)->fork_r = &(*data)->forks[0];
 	(*philo)->philo_num = i + 1;
+	// ft_sleep(100);
+	return (0);
 }

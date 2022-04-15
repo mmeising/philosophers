@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 15:31:38 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/14 21:23:15 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/16 01:00:26 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,18 @@
 
 void	*routine(void *arg)
 {
-	t_data *data;
+	t_philo *philo;
+	// t_data	*data;
 
-	data = (t_data *)arg;
-	// printf("data philo count: %i\n", data->philo_count);
-	// printf("waiting...\n");
-	// printf("waitforstart: %i\n", data->wait_for_start);
-	while (data->wait_for_start == true)
-	{
-		// printf("waitforstart: %i\n", data->wait_for_start);
+	philo = (t_philo *)arg;
+	while (philo->data->wait_for_start == true)
 		usleep(100);
-	}
-	// printf("finished waiting\n");
+	if (philo->philo_num % 2 == 0)
+		philo_sleep(philo);
+	// while (philo->status != DEAD)
+	// {
+		
+	// }
 	return (0);
 }
 
@@ -58,6 +58,7 @@ int	main(int argc, char **argv)
 		return (data->err_code);
 	if (init_threads(data->philo_count, data) != 0)
 		return (data->err_code);
+	data->ms_start = get_time();
 	data->wait_for_start = false;
 	if (wait_for_philos(data) != 0)
 		return (data->err_code);
