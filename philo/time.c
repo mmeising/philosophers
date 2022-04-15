@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/15 23:40:11 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/16 00:45:25 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/16 01:10:05 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ long	get_time(void)
 /*
  *	returns the current timestamp in ms since start
  */
-long	timestamp(t_philo *philo)
+long	timestamp(t_data *data)
 {
-	return (get_time() - philo->data->ms_start);
+	return (get_time() - data->ms_start);
 }
 
 /*

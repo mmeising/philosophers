@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 15:32:31 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/16 01:00:06 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/16 01:12:50 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,13 +85,13 @@ void	*routine(void *arg);
 int	init_data(t_data *data, int argc, char **argv);
 int	init_mutex(t_data *data);
 int	init_threads(int philo_count, t_data *data);
-int	init_philo(t_philo **philo, t_data **data, int i, int philo_count);
+int	init_philo(t_philo **philo, t_data **data, t_comb **comb, int i);
 
 //		PHILO ACTIONS
 
-// void	philo_eat(t_philo *philo);
-void	philo_sleep(t_philo *philo);
-// void	philo_think(t_philo *philo);
+// void	philo_eat(t_philo *philo, t_data *data);
+void	philo_sleep(t_philo *philo, t_data *data);
+// void	philo_think(t_philo *philo, t_data *data);
 
 //		UTILS
 
@@ -101,7 +101,7 @@ int	err_handle(t_data *data, t_error err);
 //		TIME FUNCTIONS
 
 long	get_time(void);
-long	timestamp(t_philo *philo);
+long	timestamp(t_data *data);
 void	ft_sleep(long time_ms);
 
 #endif

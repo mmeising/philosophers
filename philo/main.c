@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 15:31:38 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/16 01:00:26 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/16 01:29:30 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,17 @@
 
 void	*routine(void *arg)
 {
+	t_comb	*comb;
 	t_philo *philo;
-	// t_data	*data;
+	t_data	*data;
 
-	philo = (t_philo *)arg;
-	while (philo->data->wait_for_start == true)
+	comb = (t_comb *)arg;
+	philo = comb->philo;
+	data = comb->data;
+	while (data->wait_for_start == true)
 		usleep(100);
 	if (philo->philo_num % 2 == 0)
-		philo_sleep(philo);
+		philo_sleep(philo, data);
 	// while (philo->status != DEAD)
 	// {
 		
