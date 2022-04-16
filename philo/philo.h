@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 15:32:31 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/16 02:13:52 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/16 03:13:25 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,10 @@ typedef enum	e_error
 typedef enum	e_status
 {
 	IDLE,
-	EATING,
-	SLEEPING,
-	THINKING,
+	EAT,
+	SLEEP,
+	THINK,
+	FORK,
 	DEAD
 }	t_status;
 
@@ -62,11 +63,10 @@ typedef struct	s_data
 typedef struct s_philo
 {
 	int				philo_num;
-	int				*fork_l;//pointer because they onlypoint to
-	int				*fork_r;//the real fork from the array in data
+	int				fork_l;
+	int				fork_r;
 	long			eat_time;
 	t_status		status;
-	t_data			*data;
 }	t_philo;
 
 typedef struct	s_comb
@@ -82,19 +82,20 @@ void	*routine(void *arg);
 
 int	init_data(t_data *data, int argc, char **argv);
 int	init_mutex(t_data *data);
-int	init_threads(t_data *data, t_philo **philo);
+int	init_threads(t_data *data, t_philo ***philo);
 int	init_philo(t_philo **philo, t_data **data, t_comb **comb, int i);
 
 //		PHILO ACTIONS
 
-// void	philo_eat(t_philo *philo, t_data *data);
+void	philo_eat(t_philo *philo, t_data *data);
 void	philo_sleep(t_philo *philo, t_data *data);
 void	philo_think(t_philo *philo, t_data *data);
 
 //		UTILS
 
-int	ft_atoi(const char *str);
-int	err_handle(t_data *data, t_error err);
+int		err_handle(t_data *data, t_error err);
+void	print_stat(t_philo *philo, t_data *data, t_status stat);
+int		ft_atoi(const char *str);
 
 //		TIME FUNCTIONS
 

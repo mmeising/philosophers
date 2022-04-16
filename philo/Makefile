@@ -6,7 +6,7 @@
 #    By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/11 15:31:56 by mmeising          #+#    #+#              #
-#    Updated: 2022/04/16 01:50:51 by mmeising         ###   ########.fr        #
+#    Updated: 2022/04/16 03:17:58 by mmeising         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -57,8 +57,8 @@ fclean: clean
 
 re: fclean all
 
-test: fclean all
-	./philo 8 10 10 10
+test: all
+	./philo 2 1000 100 100
 
 debug: fclean
 	$(CC) -g $(CFLAGS) $(HEADER_FLAGS) $(SRCS) -o $(NAME)

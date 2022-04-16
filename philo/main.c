@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 15:31:38 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/16 02:13:46 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/16 03:18:31 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,13 @@ void	*routine(void *arg)
 		continue ;
 	if (philo->philo_num % 2 == 0)
 		philo_sleep(philo, data);
-	// while (philo->status != DEAD)
-	// {
-	// 	philo_eat(philo, data);
-	// 	philo_sleep(philo, data);
-	// 	philo_think(philo, data);
-	// }
+	// printf("philo %i's l&r forks are: %i %i\n", philo->philo_num, philo->fork_l, philo->fork_r);
+	while (philo->status != DEAD)
+	{
+		philo_eat(philo, data);
+		philo_sleep(philo, data);
+		philo_think(philo, data);
+	}
 	return (0);
 }
 
@@ -52,7 +53,7 @@ int	wait_for_philos(t_data *data)
 int	main(int argc, char **argv)
 {
 	t_data		*data;
-	t_philo		*philo;
+	t_philo		**philo;
 
 	data = malloc(sizeof(*data));
 	if (data == NULL)

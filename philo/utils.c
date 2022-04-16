@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 17:15:11 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/12 19:57:13 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/16 03:09:14 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,18 @@ int	err_handle(t_data *data, t_error err)
 	else if (err == FAILED_PTHREAD_JOIN)
 		printf("pthread_join failed\n");
 	return (err);//maybe need to typecast to int
+}
+
+void	print_stat(t_philo *philo, t_data *data, t_status stat)
+{
+	if (stat == EAT)
+		printf("%li %i is eating\n", timestamp(data), philo->philo_num);
+	else if (stat == SLEEP)
+		printf("%li %i is sleeping\n", timestamp(data), philo->philo_num);
+	else if (stat == THINK)
+		printf("%li %i is thinking\n", timestamp(data), philo->philo_num);
+	else if (stat == FORK)
+		printf("%li %i grabbed a fork\n", timestamp(data), philo->philo_num);
 }
 
 /*

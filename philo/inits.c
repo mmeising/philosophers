@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/14 21:08:32 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/16 01:48:31 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/16 03:02:48 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,27 +64,21 @@ int	init_mutex(t_data *data)
 /*
  *	creates the threads, one for each philosopher.
  */
-int	init_threads(t_data *data, t_philo **philo)
+int	init_threads(t_data *data, t_philo ***philo)
 {
 	t_comb		*comb;
 	int			i;
 
 	i = 0;
-	// philo = malloc(sizeof(*philo));
-	// data->forks = malloc(data->philo_count);
-	// if (data->forks == NULL || philo == NULL)
-	// 	return (err_handle(data, MALLOC_FAILED));
-	// philo->data = data;
-	// philo->status = IDLE;
+	*philo = malloc(sizeof(**philo) * data->philo_count);
 	while (i < data->philo_count)
 	{
-		if (init_philo(philo, &data, &comb, i) != 0)
+		if (init_philo(*philo, &data, &comb, i) != 0)
 			return (data->err_code);
 		if (pthread_create(&(data->thread_id[i]), NULL, &routine, comb))
 			return (err_handle(data, FAILED_CREATE_THREADS));
 		i++;
 	}
-	i = 0;
 	return (0);
 }
 
@@ -94,22 +88,19 @@ int	init_threads(t_data *data, t_philo **philo)
 int	init_philo(t_philo **philo, t_data **data, t_comb **comb, int i)
 {
 	*comb = malloc(sizeof(**comb));
-	*philo = malloc(sizeof(**philo));
-	if (*comb == NULL || *philo == NULL)
+	philo[i] = malloc(sizeof(**philo));
+	if (*comb == NULL || philo[i] == NULL)
 		return (err_handle(*data, MALLOC_FAILED));
 	(*data)->forks = malloc((*data)->philo_count);
-	if ((*data)->forks == NULL || *philo == NULL)
+	if ((*data)->forks == NULL || philo[i] == NULL)
 		return (err_handle(*data, MALLOC_FAILED));
-	(*philo)->data = *data;
-	(*philo)->status = IDLE;
-	(*philo)->fork_l = &(*data)->forks[i];
-	if (i < (*data)->philo_count - 1)
-		(*philo)->fork_r = &(*data)->forks[i + 1];
-	else
-		(*philo)->fork_r = &(*data)->forks[0];
-	(*philo)->philo_num = i + 1;
-	(*comb)->philo = *philo;
+	philo[i]->status = IDLE;
+	philo[i]->fork_l = i;
+	philo[i]->fork_r = i + 1;
+	if (i == (*data)->philo_count - 1)
+		philo[i]->fork_r = 0;
+	philo[i]->philo_num = i + 1;
+	(*comb)->philo = philo[i];
 	(*comb)->data = *data;
-	// ft_sleep(100);
 	return (0);
 }
