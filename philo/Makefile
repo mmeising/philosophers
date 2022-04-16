@@ -6,7 +6,7 @@
 #    By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/11 15:31:56 by mmeising          #+#    #+#              #
-#    Updated: 2022/04/16 01:26:01 by mmeising         ###   ########.fr        #
+#    Updated: 2022/04/16 01:50:51 by mmeising         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ CC := gcc
 CFLAGS := -Wall -Wextra -Werror
 
 SRCS :=	\
-	main.c utils.c inits.c philo_actions.c time.c
+	main.c utils.c inits.c philo_actions.c time.c reaper.c
 
 OBJ := $(SRCS:%.c=%.o)
 

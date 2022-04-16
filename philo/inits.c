@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/14 21:08:32 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/16 01:29:25 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/16 01:48:31 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,8 @@ int	init_mutex(t_data *data)
 /*
  *	creates the threads, one for each philosopher.
  */
-int	init_threads(int philo_count, t_data *data)
+int	init_threads(t_data *data, t_philo **philo)
 {
-	t_philo		*philo;
 	t_comb		*comb;
 	int			i;
 
@@ -77,9 +76,9 @@ int	init_threads(int philo_count, t_data *data)
 	// 	return (err_handle(data, MALLOC_FAILED));
 	// philo->data = data;
 	// philo->status = IDLE;
-	while (i < philo_count)
+	while (i < data->philo_count)
 	{
-		if (init_philo(&philo, &data, &comb, i) != 0)
+		if (init_philo(philo, &data, &comb, i) != 0)
 			return (data->err_code);
 		if (pthread_create(&(data->thread_id[i]), NULL, &routine, comb))
 			return (err_handle(data, FAILED_CREATE_THREADS));

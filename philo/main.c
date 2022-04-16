@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 15:31:38 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/16 01:29:30 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/16 02:13:46 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,16 @@ void	*routine(void *arg)
 	comb = (t_comb *)arg;
 	philo = comb->philo;
 	data = comb->data;
+	free(comb);
 	while (data->wait_for_start == true)
-		usleep(100);
+		continue ;
 	if (philo->philo_num % 2 == 0)
 		philo_sleep(philo, data);
 	// while (philo->status != DEAD)
 	// {
-		
+	// 	philo_eat(philo, data);
+	// 	philo_sleep(philo, data);
+	// 	philo_think(philo, data);
 	// }
 	return (0);
 }
@@ -49,9 +52,8 @@ int	wait_for_philos(t_data *data)
 int	main(int argc, char **argv)
 {
 	t_data		*data;
-	pthread_t	*threads;
+	t_philo		*philo;
 
-	threads = NULL;
 	data = malloc(sizeof(*data));
 	if (data == NULL)
 		return (err_handle(data, MALLOC_FAILED));
@@ -59,12 +61,13 @@ int	main(int argc, char **argv)
 		return (data->err_code);
 	if (init_mutex(data) != 0)
 		return (data->err_code);
-	if (init_threads(data->philo_count, data) != 0)
+	if (init_threads(data, &philo) != 0)
 		return (data->err_code);
 	data->ms_start = get_time();
 	data->wait_for_start = false;
 	if (wait_for_philos(data) != 0)
 		return (data->err_code);
+	// reaper(data, philo);
 	return (0);
 }
 

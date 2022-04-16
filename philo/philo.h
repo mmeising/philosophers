@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 15:32:31 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/16 01:12:50 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/16 02:13:52 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,7 @@ typedef struct s_philo
 	int				philo_num;
 	int				*fork_l;//pointer because they onlypoint to
 	int				*fork_r;//the real fork from the array in data
-	long			timestamp;
 	long			eat_time;
-	struct timeval	tv_sleep;
-	struct timeval	tv_think;
 	t_status		status;
 	t_data			*data;
 }	t_philo;
@@ -79,19 +76,20 @@ typedef struct	s_comb
 }	t_comb;
 
 void	*routine(void *arg);
+// void	reaper(t_data *data, t_philo *philo);
 
 //		INITS
 
 int	init_data(t_data *data, int argc, char **argv);
 int	init_mutex(t_data *data);
-int	init_threads(int philo_count, t_data *data);
+int	init_threads(t_data *data, t_philo **philo);
 int	init_philo(t_philo **philo, t_data **data, t_comb **comb, int i);
 
 //		PHILO ACTIONS
 
 // void	philo_eat(t_philo *philo, t_data *data);
 void	philo_sleep(t_philo *philo, t_data *data);
-// void	philo_think(t_philo *philo, t_data *data);
+void	philo_think(t_philo *philo, t_data *data);
 
 //		UTILS
 
