@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/16 22:23:30 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/17 22:34:51 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/18 00:15:42 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,10 +74,6 @@ typedef struct s_comb
 	t_philo	*philo;
 }	t_comb;
 
-void	print_all_data(t_data *data, t_philo **philos);
-
-void	*routine(void *arg);
-int		wait_for_threads(t_data *data);
 void	reaper(t_data *data, t_philo **philos);
 void	sweeper(t_data *data, t_philo **philos);
 
@@ -90,6 +86,8 @@ int		init_threads(t_data *data, t_philo **philos);
 
 /*		actions				*/
 
+void	*routine(void *arg);
+bool	check_if_running(t_data *data);
 void	philo_eat(t_data *data, t_philo *philo);
 void	philo_sleep(t_data *data, t_philo *philo);
 void	philo_think(t_data *data, t_philo *philo);

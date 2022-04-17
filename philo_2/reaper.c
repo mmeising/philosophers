@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/17 01:09:09 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/17 23:41:53 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/17 23:48:56 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,8 @@ int	check_reset_counts(t_data *data, int *i, int *ate_enough)
 			pthread_mutex_lock(&(data->running_lock));
 			data->running = false;
 			pthread_mutex_unlock(&(data->running_lock));
-			printf(GREEN"everyone ate enough! stopping simulation\n"RESET);
+			printf(GREEN"%li everyone ate enough! stopping simulation\n"RESET,
+				timestamp(data));
 			return (EXIT_FAILURE);
 		}
 		*ate_enough = 0;

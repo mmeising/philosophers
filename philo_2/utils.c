@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/16 22:45:26 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/18 00:00:05 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/18 00:29:20 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,9 @@ void	*ft_calloc(int count, int size)
  */
 long	ft_atoi(const char *str)
 {
-	long long int	nb;
-	int				i;
-	int				sign;
+	long	nb;
+	int		i;
+	int		sign;
 
 	nb = 0;
 	i = 0;
@@ -79,6 +79,12 @@ long	ft_atoi(const char *str)
 	return (sign * nb);
 }
 
+/*
+ *	prints timestamp, philosopher number and its status.
+ *
+ *	only prints if the simulation should still be runnning to protect from
+ *	any prints after a philosopher died.
+ */
 void	print_status(t_data *data, t_philo *philo, t_status status)
 {
 	pthread_mutex_lock(&(data->running_lock));
@@ -98,6 +104,10 @@ void	print_status(t_data *data, t_philo *philo, t_status status)
 	pthread_mutex_unlock(&(data->running_lock));
 }
 
+/*
+ *	prints the error messages for wrong input count or
+ *	input that is no positive integer.
+ */
 int	args_fail(t_status err)
 {
 	if (err == WRONG_ARGC)

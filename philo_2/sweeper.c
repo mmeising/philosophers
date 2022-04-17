@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/17 01:21:49 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/17 22:38:42 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/18 00:30:07 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,9 @@ void	free_data(t_data *data)
 	data = NULL;
 }
 
+/*
+ *	takes care of freeing all mutexes, philos and data.
+ */
 void	sweeper(t_data *data, t_philo **philos)
 {
 	ft_sleep(1000);

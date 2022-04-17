@@ -6,7 +6,7 @@
 #    By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/16 22:44:45 by mmeising          #+#    #+#              #
-#    Updated: 2022/04/17 22:43:04 by mmeising         ###   ########.fr        #
+#    Updated: 2022/04/18 00:31:44 by mmeising         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,8 +16,7 @@ CC := gcc
 CFLAGS := -Wall -Wextra -Werror -pthread
 
 SRCS :=	\
-	main.c utils.c inits.c philo_actions.c time.c reaper.c print_all_data.c \
-	sweeper.c
+	main.c utils.c inits.c philo_actions.c time.c reaper.c sweeper.c
 
 OBJ := $(SRCS:%.c=%.o)
 
@@ -58,7 +57,7 @@ fclean: clean
 
 re: fclean all
 
-PHILO_COUNT := 8
+PHILO_COUNT := 200
 DIE_TIME := 510
 EAT_TIME := 200
 SLEEP_TIME := 200
