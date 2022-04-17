@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/16 23:16:23 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/17 22:30:29 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/17 23:43:31 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	init_data(t_data **data, char **argv)
 
 /*
  *	mallocs philos 2d array and each philo struct, sets forks and philo_num.
-*	returns: on error EXIT_FAILURE, otherwise EXIT_SUCCESS.
+ *	returns: on error EXIT_FAILURE, otherwise EXIT_SUCCESS.
  */
 int	init_philos(t_data *data, t_philo ***philos)
 {
@@ -72,6 +72,9 @@ int	init_philos(t_data *data, t_philo ***philos)
 	return (EXIT_SUCCESS);
 }
 
+/*
+ *	calls pthread__mutex_init for all mutexes
+ */
 int	init_mutexes(t_data *data)
 {
 	int	i;
@@ -94,6 +97,9 @@ int	init_mutexes(t_data *data)
 	return (EXIT_SUCCESS);
 }
 
+/*
+ *	starts all philosopher's threads.
+ */
 int	init_threads(t_data *data, t_philo **philos)
 {
 	t_comb	*comb;
