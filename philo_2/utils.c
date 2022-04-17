@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/16 22:45:26 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/17 22:20:59 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/18 00:00:05 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ void	*ft_calloc(int count, int size)
 {
 	void			*ptr;
 	unsigned int	i;
-	char			*char_ptr;
 
 	if (count <= 0 || size <= 0)
 		return (NULL);
@@ -45,7 +44,6 @@ void	*ft_calloc(int count, int size)
 	ptr = malloc(i);
 	if (ptr == NULL)
 		return (NULL);
-	char_ptr = (char *)ptr;
 	ft_memset(ptr, '\0', count * size);
 	return (ptr);
 }
@@ -97,7 +95,7 @@ void	print_status(t_data *data, t_philo *philo, t_status status)
 		printf("%li %i is thinking\n", timestamp(data), philo->philo_num);
 	else if (status == FORK)
 		printf("%li %i has taken a fork\n", timestamp(data), philo->philo_num);
-	pthread_mutex_unlock(&(data->running_lock));//maybe move the unlock to before printing
+	pthread_mutex_unlock(&(data->running_lock));
 }
 
 int	args_fail(t_status err)
