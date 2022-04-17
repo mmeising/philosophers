@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/16 23:12:36 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/17 22:38:19 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/17 23:44:26 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,13 +62,9 @@ void	*routine(void *arg)
 		continue ;
 	if (philo->philo_num % 2 == 0)
 		philo_sleep(data, philo);
-	while (true)
+	while (check_if_running(data))
 	{
-		if (check_if_running(data) == false)
-			break ;
 		philo_eat(data, philo);
-		// if (check_if_running(data) == false)
-		// 	break ;
 		philo_sleep(data, philo);
 		philo_think(data, philo);
 	}
@@ -108,9 +104,6 @@ int	main(int argc, char **argv)
 	data->ms_start = ft_get_time();
 	data->wait_for_start = false;
 	reaper(data, philos);
-	// if (wait_for_threads(data))
-	// 	return (EXIT_FAILURE);
 	sweeper(data, philos);
 	return (0);
-	// print_all_data(data, philos);
 }
