@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/16 22:23:30 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/17 01:55:03 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/17 22:34:51 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <sys/time.h>
 # include <pthread.h>
 # include <stdbool.h>
+# include <limits.h>
 
 # define BLUE "\033[38;5;36m"
 # define RED "\033[0;31m"
@@ -35,7 +36,8 @@ typedef enum e_status
 	THINK,
 	FORK,
 	DEAD,
-	WRONG_INPUT
+	WRONG_ARGC,
+	WRONG_INTS
 }	t_status;
 
 typedef struct s_data
@@ -44,9 +46,11 @@ typedef struct s_data
 	long			die_time;
 	long			eat_time;
 	long			sleep_time;
+	long			min_eat_count;
 	pthread_t		*thread_ids;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	*eat_time_locks;
+	pthread_mutex_t	*eat_count_locks;
 	long			ms_start;
 	pthread_mutex_t	ms_start_lock;
 	int				err_code;
@@ -57,10 +61,11 @@ typedef struct s_data
 
 typedef struct s_philo
 {
+	long		eat_time;
 	int			philo_num;
 	int			fork_l;
 	int			fork_r;
-	long		eat_time;
+	int			eat_count;
 }	t_philo;
 
 typedef struct s_comb
@@ -78,7 +83,7 @@ void	sweeper(t_data *data, t_philo **philos);
 
 /*		inits				*/
 
-int		init_data(t_data **data, int argc, char **argv);
+int		init_data(t_data **data, char **argv);
 int		init_philos(t_data *data, t_philo ***philos);
 int		init_mutexes(t_data *data);
 int		init_threads(t_data *data, t_philo **philos);
@@ -92,8 +97,9 @@ void	philo_think(t_data *data, t_philo *philo);
 /*		utils				*/
 
 void	*ft_calloc(int count, int size);
-int		ft_atoi(const char *str);
+long	ft_atoi(const char *str);
 void	print_status(t_data *data, t_philo *philo, t_status status);
+int		args_fail(t_status err);
 
 /*		time functions		*/
 

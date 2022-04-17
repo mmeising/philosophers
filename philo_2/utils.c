@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/16 22:45:26 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/17 02:05:45 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/17 22:20:59 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,10 @@ void	*ft_calloc(int count, int size)
 }
 
 /*
- *	returns input (string representation of number) as integer value.
+ *	returns input (string representation of number) as long value.
+ *	has to return long to be able to compare it against INT_MAX.
  */
-int	ft_atoi(const char *str)
+long	ft_atoi(const char *str)
 {
 	long long int	nb;
 	int				i;
@@ -82,6 +83,12 @@ int	ft_atoi(const char *str)
 
 void	print_status(t_data *data, t_philo *philo, t_status status)
 {
+	pthread_mutex_lock(&(data->running_lock));
+	if (data->running == false)
+	{
+		pthread_mutex_unlock(&(data->running_lock));
+		return ;
+	}
 	if (status == EAT)
 		printf("%li %i is eating\n", timestamp(data), philo->philo_num);
 	else if (status == SLEEP)
@@ -90,11 +97,19 @@ void	print_status(t_data *data, t_philo *philo, t_status status)
 		printf("%li %i is thinking\n", timestamp(data), philo->philo_num);
 	else if (status == FORK)
 		printf("%li %i has taken a fork\n", timestamp(data), philo->philo_num);
-	// else if (status == DEAD)
-	// 	printf(RED"%li %i died\n", timestamp(data), philo->philo_num);
-	else if (status == WRONG_INPUT)
+	pthread_mutex_unlock(&(data->running_lock));//maybe move the unlock to before printing
+}
+
+int	args_fail(t_status err)
+{
+	if (err == WRONG_ARGC)
 	{
 		printf("usage: ./philo <num_of_philos> <time_to_die> ");
-		printf("<time_to_eat> <time_to_sleep>\n");
+		printf("<time_to_eat> <time_to_sleep> [(optional)min_eat_times]\n");
 	}
+	else if (err == WRONG_INTS)
+	{
+		printf("input arguments must be positive ints only!\n");
+	}
+	return (EXIT_FAILURE);
 }

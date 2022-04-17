@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/17 00:08:15 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/17 00:28:20 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/17 22:29:48 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,11 @@
 void	print_data(t_data *data)
 {
 	printf(GREEN"DATA\n\n"RESET);
-	printf("philo_count\t%i\ndie_time\t%li\neat_time\t%li\nsleep_time\t%li\n\n",
+	printf("philo_count\t%i\ndie_time\t%li\neat_time\t%li\nsleep_time\t%li\n",
 		data->philo_count, data->die_time, data->eat_time, data->sleep_time);
+	if (data->min_eat_count)
+		printf("min_eat_count: %li\n", data->min_eat_count);
+	printf("\n");
 }
 
 void	print_philo_num(t_philo **philos, int num)

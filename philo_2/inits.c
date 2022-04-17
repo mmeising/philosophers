@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/16 23:16:23 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/17 01:55:23 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/17 22:30:29 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,27 +17,26 @@
  *	initializes starting data.
  *	returns: on error EXIT_FAILURE, otherwise EXIT_SUCCESS.
  */
-int	init_data(t_data **data, int argc, char **argv)
+int	init_data(t_data **data, char **argv)
 {
 	*data = (t_data *)ft_calloc(1, sizeof(**data));
 	if (*data == NULL)
 		return (EXIT_FAILURE);
-	if (argc != 5)
-	{
-		printf("usage: ./philo <num_of_philos> <time_to_die> ");
-		printf("<time_to_eat> <time_to_sleep>\n");
-		return (EXIT_FAILURE);
-	}
 	(*data)->philo_count = ft_atoi(argv[1]);
 	(*data)->die_time = ft_atoi(argv[2]);
 	(*data)->eat_time = ft_atoi(argv[3]);
 	(*data)->sleep_time = ft_atoi(argv[4]);
+	(*data)->min_eat_count = 0;
+	if (argv[5])
+		(*data)->min_eat_count = ft_atoi(argv[5]);
 	(*data)->thread_ids = ft_calloc((*data)->philo_count, sizeof(pthread_t));
 	(*data)->forks = ft_calloc((*data)->philo_count, sizeof(pthread_mutex_t));
 	(*data)->eat_time_locks = ft_calloc((*data)->philo_count,
 			sizeof(pthread_mutex_t));
+	(*data)->eat_count_locks = ft_calloc((*data)->philo_count,
+			sizeof(pthread_mutex_t));
 	if ((*data)->thread_ids == NULL || (*data)->forks == NULL
-		|| (*data)->eat_time_locks == NULL)
+		|| (*data)->eat_time_locks == NULL || (*data)->eat_count_locks == NULL)
 		return (EXIT_FAILURE);
 	(*data)->err_code = 0;
 	(*data)->wait_for_start = true;
@@ -67,6 +66,7 @@ int	init_philos(t_data *data, t_philo ***philos)
 		(*philos)[i]->fork_r = i + 1;
 		if (i == data->philo_count - 1)
 			(*philos)[i]->fork_r = 0;
+		(*philos)[i]->eat_count = 0;
 		i++;
 	}
 	return (EXIT_SUCCESS);
@@ -86,6 +86,8 @@ int	init_mutexes(t_data *data)
 		if (pthread_mutex_init(&(data->forks[i]), NULL))
 			return (EXIT_FAILURE);
 		if (pthread_mutex_init(&(data->eat_time_locks[i]), NULL))
+			return (EXIT_FAILURE);
+		if (pthread_mutex_init(&(data->eat_count_locks[i]), NULL))
 			return (EXIT_FAILURE);
 		i++;
 	}

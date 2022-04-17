@@ -6,11 +6,35 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/16 23:12:36 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/17 02:04:28 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/17 22:38:19 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+int	check_input(int argc, char **argv)
+{
+	int	i;
+	int	j;
+
+	if (argc < 5 || argc > 6)
+		return (args_fail(WRONG_ARGC));
+	i = 1;
+	while (i < argc)
+	{
+		j = 0;
+		if (ft_atoi(argv[i]) > INT_MAX || ft_atoi(argv[i]) <= 0)
+			return (args_fail(WRONG_INTS));
+		while (argv[i][j])
+		{
+			if (!(argv[i][j] >= '0' && argv[i][j] <= '9'))
+				return (args_fail(WRONG_INTS));
+			j++;
+		}
+		i++;
+	}
+	return (EXIT_SUCCESS);
+}
 
 bool	check_if_running(t_data *data)
 {
@@ -43,11 +67,9 @@ void	*routine(void *arg)
 		if (check_if_running(data) == false)
 			break ;
 		philo_eat(data, philo);
-		if (check_if_running(data) == false)
-			break ;
+		// if (check_if_running(data) == false)
+		// 	break ;
 		philo_sleep(data, philo);
-		if (check_if_running(data) == false)
-			break ;
 		philo_think(data, philo);
 	}
 	return (0);
@@ -60,6 +82,7 @@ int	wait_for_threads(t_data *data)
 	i = 0;
 	while (i < data->philo_count)
 	{
+		printf("about to wait for: %i\n", i + 1);
 		if (pthread_join(data->thread_ids[i], NULL))
 			return (EXIT_FAILURE);
 		i++;
@@ -72,7 +95,9 @@ int	main(int argc, char **argv)
 	t_data	*data;
 	t_philo	**philos;
 
-	if (init_data(&data, argc, argv))
+	if (check_input(argc, argv))
+		return (EXIT_FAILURE);
+	if (init_data(&data, argv))
 		return (EXIT_FAILURE);
 	if (init_philos(data, &philos))
 		return (EXIT_FAILURE);
@@ -83,9 +108,9 @@ int	main(int argc, char **argv)
 	data->ms_start = ft_get_time();
 	data->wait_for_start = false;
 	reaper(data, philos);
-	sweeper(data, philos);
 	// if (wait_for_threads(data))
 	// 	return (EXIT_FAILURE);
+	sweeper(data, philos);
 	return (0);
 	// print_all_data(data, philos);
 }
