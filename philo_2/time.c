@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/16 22:35:26 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/17 01:16:39 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/17 01:53:41 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	ft_sleep(long ms_time)
 
 	start_time = ft_get_time();
 	while ((ft_get_time() - start_time) < ms_time)
-		usleep(50);
+		usleep(500);
 }
 
 /*

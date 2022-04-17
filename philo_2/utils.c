@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/16 22:45:26 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/17 00:08:29 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/17 02:05:45 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,8 +90,8 @@ void	print_status(t_data *data, t_philo *philo, t_status status)
 		printf("%li %i is thinking\n", timestamp(data), philo->philo_num);
 	else if (status == FORK)
 		printf("%li %i has taken a fork\n", timestamp(data), philo->philo_num);
-	else if (status == DEAD)
-		printf("%li %i died\n", timestamp(data), philo->philo_num);
+	// else if (status == DEAD)
+	// 	printf(RED"%li %i died\n", timestamp(data), philo->philo_num);
 	else if (status == WRONG_INPUT)
 	{
 		printf("usage: ./philo <num_of_philos> <time_to_die> ");

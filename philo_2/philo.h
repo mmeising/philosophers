@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/16 22:23:30 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/17 01:15:25 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/17 01:55:03 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ typedef struct s_data
 	pthread_mutex_t	ms_start_lock;
 	int				err_code;
 	bool			wait_for_start;
+	bool			running;
+	pthread_mutex_t	running_lock;
 }	t_data;
 
 typedef struct s_philo
@@ -72,6 +74,7 @@ void	print_all_data(t_data *data, t_philo **philos);
 void	*routine(void *arg);
 int		wait_for_threads(t_data *data);
 void	reaper(t_data *data, t_philo **philos);
+void	sweeper(t_data *data, t_philo **philos);
 
 /*		inits				*/
 

@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/16 23:16:23 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/17 00:49:23 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/17 01:55:23 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ int	init_data(t_data **data, int argc, char **argv)
 		return (EXIT_FAILURE);
 	(*data)->err_code = 0;
 	(*data)->wait_for_start = true;
+	(*data)->running = true;
 	return (EXIT_SUCCESS);
 }
 
@@ -76,6 +77,8 @@ int	init_mutexes(t_data *data)
 	int	i;
 
 	if (pthread_mutex_init(&(data->ms_start_lock), NULL))
+		return (EXIT_FAILURE);
+	if (pthread_mutex_init(&(data->running_lock), NULL))
 		return (EXIT_FAILURE);
 	i = 0;
 	while (i < data->philo_count)

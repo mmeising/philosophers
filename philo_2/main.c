@@ -6,11 +6,23 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/16 23:12:36 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/17 01:15:36 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/17 02:04:28 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+bool	check_if_running(t_data *data)
+{
+	pthread_mutex_lock(&(data->running_lock));
+	if (data->running == false)
+	{
+		pthread_mutex_unlock(&(data->running_lock));
+		return (false);
+	}
+	pthread_mutex_unlock(&(data->running_lock));
+	return (true);
+}
 
 void	*routine(void *arg)
 {
@@ -28,8 +40,14 @@ void	*routine(void *arg)
 		philo_sleep(data, philo);
 	while (true)
 	{
+		if (check_if_running(data) == false)
+			break ;
 		philo_eat(data, philo);
+		if (check_if_running(data) == false)
+			break ;
 		philo_sleep(data, philo);
+		if (check_if_running(data) == false)
+			break ;
 		philo_think(data, philo);
 	}
 	return (0);
@@ -65,6 +83,7 @@ int	main(int argc, char **argv)
 	data->ms_start = ft_get_time();
 	data->wait_for_start = false;
 	reaper(data, philos);
+	sweeper(data, philos);
 	// if (wait_for_threads(data))
 	// 	return (EXIT_FAILURE);
 	return (0);
