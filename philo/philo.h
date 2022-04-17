@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 15:32:31 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/16 03:13:25 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/16 23:19:23 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,13 @@
 # include <sys/time.h>
 # include <pthread.h>
 # include <stdbool.h>
+
+# define BLUE "\033[38;5;36m"
+# define RED "\033[0;31m"
+# define YELLOW "\033[0;33m"
+# define PURPLE "\033[0;35m"
+# define GREEN "\033[0;32m"
+# define RESET "\033[0m"
 
 typedef enum	e_error
 {
@@ -42,7 +49,7 @@ typedef enum	e_status
 	SLEEP,
 	THINK,
 	FORK,
-	DEAD
+	DEAD,
 }	t_status;
 
 typedef struct	s_data
@@ -52,10 +59,10 @@ typedef struct	s_data
 	int				eat_t;
 	int				sleep_t;
 	bool			wait_for_start;
-	int				*forks;
 	pthread_t		*thread_id;
 	pthread_mutex_t	*fork_lock;
 	pthread_mutex_t	*philo_time_lock;
+	pthread_mutex_t	ms_start_lock;
 	long			ms_start;
 	t_error		err_code;
 }	t_data;
@@ -76,14 +83,15 @@ typedef struct	s_comb
 }	t_comb;
 
 void	*routine(void *arg);
-// void	reaper(t_data *data, t_philo *philo);
+void	reaper(t_philo **philo, t_data *data);
+bool	all_alive(t_philo **philo, t_data *data);
 
 //		INITS
 
 int	init_data(t_data *data, int argc, char **argv);
 int	init_mutex(t_data *data);
-int	init_threads(t_data *data, t_philo ***philo);
-int	init_philo(t_philo **philo, t_data **data, t_comb **comb, int i);
+int	init_threads(t_data *data, t_philo **philo);
+int	init_philo(t_philo *philo, t_data *data, int i);
 
 //		PHILO ACTIONS
 

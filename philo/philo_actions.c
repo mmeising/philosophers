@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/15 23:37:00 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/16 03:17:26 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/16 03:42:33 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,10 @@ void	grab_forks(t_philo *philo, t_data *data)
 void	philo_eat(t_philo *philo, t_data *data)
 {
 	grab_forks(philo, data);
+	pthread_mutex_lock(&(data->philo_time_lock[philo->philo_num]));
 	philo->eat_time = timestamp(data);
+	pthread_mutex_unlock(&(data->ms_start_lock));
+	pthread_mutex_unlock(&(data->philo_time_lock[philo->philo_num]));
 	print_stat(philo, data, EAT);
 	ft_sleep(data->eat_t);
 	pthread_mutex_unlock(&(data->fork_lock[philo->fork_l]));
@@ -41,4 +44,5 @@ void	philo_sleep(t_philo *philo, t_data *data)
 void	philo_think(t_philo *philo, t_data *data)
 {
 	printf("%li %i is thinking\n", timestamp(data), philo->philo_num);
+	pthread_mutex_unlock(&(data->ms_start_lock));
 }

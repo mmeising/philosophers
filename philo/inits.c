@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/14 21:08:32 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/16 03:02:48 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/17 00:19:53 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,6 @@ int	init_data(t_data *data, int argc, char **argv)
 	data->thread_id = malloc(sizeof(int) * data->philo_count);
 	if (data->thread_id == NULL)
 		return (err_handle(data, MALLOC_FAILED));
-	data->forks = malloc(sizeof(*data->forks) * data->philo_count);
-	if (data->forks == NULL)
-		return (err_handle(data, MALLOC_FAILED));
-	memset(data->forks, 0, sizeof(*(data->forks)) * data->philo_count);
 	data->wait_for_start = true;
 	return (0);
 }
@@ -56,6 +52,7 @@ int	init_mutex(t_data *data)
 	{
 		pthread_mutex_init(&(data->fork_lock[i]), NULL);
 		pthread_mutex_init(&(data->philo_time_lock[i]), NULL);
+		// pthread_mutex_init(&(data->philo_time_lock[i]), NULL);
 		i++;
 	}
 	return (0);
@@ -64,19 +61,36 @@ int	init_mutex(t_data *data)
 /*
  *	creates the threads, one for each philosopher.
  */
-int	init_threads(t_data *data, t_philo ***philo)
+int	init_threads(t_data *data, t_philo **philo)
 {
 	t_comb		*comb;
 	int			i;
+	int			j = 0;
 
 	i = 0;
-	*philo = malloc(sizeof(**philo) * data->philo_count);
+	// printf("philo_count: %i, sizeof philo: %li, size *philo: %li, size **philo: %li, size ***philo: %li\n", data->philo_count, sizeof(t_philo ***), sizeof(t_philo **), sizeof(t_philo *), sizeof(t_philo));
+	// return (5);
+	// *philo = (t_philo **)malloc(sizeof(t_philo *) * data->philo_count * 8);
+	printf(PURPLE"before init_threads:\t%p\n"RESET, philo[0]);
 	while (i < data->philo_count)
 	{
-		if (init_philo(*philo, &data, &comb, i) != 0)
+		if (init_philo(philo[i], data, i) != 0)
 			return (data->err_code);
+		while (j <= data->philo_count)
+		{
+			printf(PURPLE"after init_philo:\t%p\t%i\n"RESET, philo[j], j + 1);
+			j++;
+		}
+		j = 0;
+		comb = malloc(sizeof(*comb));
+		if (comb == NULL)
+			return (err_handle(data, MALLOC_FAILED));
+		comb->philo = philo[i];
+		comb->data = data;
 		if (pthread_create(&(data->thread_id[i]), NULL, &routine, comb))
 			return (err_handle(data, FAILED_CREATE_THREADS));
+		// free(comb);
+		usleep(1000);
 		i++;
 	}
 	return (0);
@@ -85,22 +99,17 @@ int	init_threads(t_data *data, t_philo ***philo)
 /*
  *	sets the fork pointers of each philosopher to the forks next to them.
  */
-int	init_philo(t_philo **philo, t_data **data, t_comb **comb, int i)
+int	init_philo(t_philo *philo, t_data *data, int i)
 {
-	*comb = malloc(sizeof(**comb));
-	philo[i] = malloc(sizeof(**philo));
-	if (*comb == NULL || philo[i] == NULL)
-		return (err_handle(*data, MALLOC_FAILED));
-	(*data)->forks = malloc((*data)->philo_count);
-	if ((*data)->forks == NULL || philo[i] == NULL)
-		return (err_handle(*data, MALLOC_FAILED));
-	philo[i]->status = IDLE;
-	philo[i]->fork_l = i;
-	philo[i]->fork_r = i + 1;
-	if (i == (*data)->philo_count - 1)
-		philo[i]->fork_r = 0;
-	philo[i]->philo_num = i + 1;
-	(*comb)->philo = philo[i];
-	(*comb)->data = *data;
+	// philo = (t_philo *)malloc(sizeof(t_philo));
+	// if (philo == NULL)
+	// 	return (err_handle(data, MALLOC_FAILED));
+	philo->status = IDLE;
+	philo->fork_l = i;
+	philo->fork_r = i + 1;
+	if (i == data->philo_count - 1)
+		philo->fork_r = 0;
+	philo->philo_num = i + 1;
+	printf(RED"inside init philo i: %i, addr: %p, num: %i\n"RESET, i, philo, philo->philo_num);
 	return (0);
 }

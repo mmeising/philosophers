@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/15 23:40:11 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/16 01:10:05 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/16 03:40:11 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ long	get_time(void)
  */
 long	timestamp(t_data *data)
 {
+	pthread_mutex_lock(&(data->ms_start_lock));
 	return (get_time() - data->ms_start);
 }
 

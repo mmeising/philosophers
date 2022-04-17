@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 17:15:11 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/16 03:09:14 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/16 03:49:27 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,9 @@ void	print_stat(t_philo *philo, t_data *data, t_status stat)
 		printf("%li %i is thinking\n", timestamp(data), philo->philo_num);
 	else if (stat == FORK)
 		printf("%li %i grabbed a fork\n", timestamp(data), philo->philo_num);
+	else if (stat == DEAD)
+		printf(RED"%li %i DIED!!!\n"RESET, timestamp(data), philo->philo_num);
+	pthread_mutex_unlock(&(data->ms_start_lock));
 }
 
 /*

@@ -6,7 +6,7 @@
 #    By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/11 15:31:56 by mmeising          #+#    #+#              #
-#    Updated: 2022/04/16 03:17:58 by mmeising         ###   ########.fr        #
+#    Updated: 2022/04/16 22:15:37 by mmeising         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,11 +25,11 @@ HEADER := ./
 HEADER_FLAGS := -I $(HEADER)
 HEADER_FILES := $(HEADER)philo.h
 
-Y = "\033[33m"
-R = "\033[31m"
-G = "\033[32m"
-B = "\033[34m"
-X = "\033[0m"
+YELLOW = "\033[33m"
+RED = "\033[31m"
+GREEN = "\033[32m"
+BLUE = "\033[34m"
+RESET = "\033[0m"
 UP = "\033[A"
 CUT = "\033[K"
 
@@ -58,10 +58,10 @@ fclean: clean
 re: fclean all
 
 test: all
-	./philo 2 1000 100 100
+	./philo 16 10 100 100
 
 debug: fclean
 	$(CC) -g $(CFLAGS) $(HEADER_FLAGS) $(SRCS) -o $(NAME)
-	lldb $(NAME) 3 10 10 10
+	lldb $(NAME) 16 10 100 100
 
 .PHONY: all clean fclean re
