@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 20:32:29 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/20 20:32:48 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/21 18:12:01 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,29 @@ void	ft_sleep(long ms_time)
 	start_time = ft_get_time();
 	while ((ft_get_time() - start_time) < ms_time)
 		usleep(100);
+}
+
+/*
+ *	sleeps for ms_time milliseconds, checking every loop if philo didn't starve.
+ *	if philo starved, sets stat to DEAD and returns DEAD.
+ *	if it finished waiting without a death, returns 0.
+ */
+t_status	ft_sleep_check(t_data *data, t_philo *philo, long ms_time)
+{
+	long	start_time;
+
+	start_time = ft_get_time();
+	while ((ft_get_time() - start_time) < ms_time)
+	{
+		if (philo->eat_time + data->die_time < timestamp(data))
+		{
+			philo->stat = DEAD;
+			return (DEAD);
+		}
+		else
+			usleep(100);
+	}
+	return (0);
 }
 
 /*

@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 22:08:22 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/20 23:44:07 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/21 19:19:34 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,15 @@ void	init_data(t_data **data, char **argv)
 	if (argv[5])
 		(*data)->min_eat_count = ft_atoi(argv[5]);
 	(*data)->threads_watch = ft_calloc((*data)->philo_count, sizeof(pthread_t));
-	(*data)->eat_time_locks = ft_calloc((*data)->philo_count, sizeof(sem_t));
-	(*data)->eat_count_locks = ft_calloc((*data)->philo_count, sizeof(sem_t));
+	(*data)->eat_time_locks = ft_calloc((*data)->philo_count, sizeof(sem_t *));
+	(*data)->eat_count_locks = ft_calloc((*data)->philo_count, sizeof(sem_t *));
 	(*data)->eat_time_idents = ft_calloc((*data)->philo_count, sizeof(char *));
 	(*data)->eat_count_idents = ft_calloc((*data)->philo_count, sizeof(char *));
 	if ((*data)->threads_watch == NULL || (*data)->eat_time_locks == NULL
 		|| (*data)->eat_count_locks == NULL || (*data)->eat_time_idents == NULL
 		|| (*data)->eat_count_idents == NULL)
 		exit(MALLOC_FAIL);
-	(*data)->running = true;
+	// (*data)->running = true;
 }
 
 void	init_philos(t_data *data, t_philo ***philos)
@@ -80,19 +80,19 @@ void	init_locks(t_data *data)
 {
 	int	i;
 
-	data->forks = sem_open("forks", O_CREAT, NULL, data->philo_count);
-	data->start_lock = sem_open("start_lock", O_CREAT, NULL, 0);
-	data->running_lock = sem_open("running_lock", O_CREAT, NULL, 1);
+	data->forks = sem_open("forks", O_CREAT, 00660, data->philo_count);
+	data->start_lock = sem_open("start_lock", O_CREAT, 00660, 0);
+	// data->running_lock = sem_open("running_lock", O_CREAT, 00660, 1);
 	if (data->forks == SEM_FAILED || data->start_lock == SEM_FAILED
-		|| data->running_lock == SEM_FAILED)
+		/*|| data->running_lock == SEM_FAILED*/)
 		exit(SEM_FAILED);
 	i = 0;
 	while (i < data->philo_count)
 	{
 		data->eat_time_locks[i] = sem_open(data->eat_time_idents[i],
-			O_CREAT, NULL, 1);
+			O_CREAT, 00660, 1);
 		data->eat_count_locks[i] = sem_open(data->eat_count_idents[i],
-			O_CREAT, NULL, 1);
+			O_CREAT, 00660, 1);
 		if (data->eat_time_locks == SEM_FAILED
 			|| data->eat_count_locks == SEM_FAILED)
 			exit(SEM_FAILED);
@@ -112,4 +112,6 @@ void	init_processes(t_data *data, t_philo **philos)
 			philo_routine(data, philos, i);
 		i++;
 	}
+	data->ms_start = timestamp(data);//does order of timestamp and
+	sem_post(data->start_lock);//sem_post make a difference in timing?
 }

@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 19:08:05 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/20 23:47:35 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/21 19:15:10 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,5 +59,10 @@ int	main(int argc, char **argv)
 	init_locks(data);
 	init_processes(data, philos);
 	reaper(data, philos);//needs to set up and then wait for start_lock
-	sem_post_n(data->start_lock, data->philo_count * 2);// times 2 for processes and reaper checkers to start
+	// sem_post_n(data->start_lock, data->philo_count * 2);// times 2 for processes and reaper checkers to start
+	//	or rather start lock with 0, post1 when starting. every waiting process will also post1 afterwards,
+	//	which should start up every single process
+//	sweaper(data, philos);//kill all processes and free every non-NULL pointer
+	//maybe also reuse the start_lock so sweeper only starts when a reaper detects process end.
 }
+//00660 as sem_open mode flag (user and group have read and write permission)

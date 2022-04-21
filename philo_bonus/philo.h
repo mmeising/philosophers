@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/16 22:23:30 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/20 23:41:48 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/21 19:19:06 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ typedef enum e_status
 	THINK,
 	FORK,
 	DEAD,
+	ATE_ENOUGH,
 	WRONG_ARGC,
 	WRONG_INTS
 }	t_status;
@@ -58,15 +59,15 @@ typedef struct s_data
 	long			sleep_time;
 	long			min_eat_count;
 	pthread_t		*threads_watch;
-	sem_t			forks;
-	sem_t			*eat_time_locks;
-	sem_t			*eat_count_locks;
+	sem_t			*forks;
+	sem_t			**eat_time_locks;
+	sem_t			**eat_count_locks;
 	char			**eat_time_idents;
 	char			**eat_count_idents;
 	long			ms_start;
-	sem_t			start_lock;
-	bool			running;
-	sem_t			running_lock;
+	sem_t			*start_lock;
+	// bool			running;
+	// sem_t			running_lock;//starts at 1, wait/post for each print
 }	t_data;
 
 typedef struct s_philo
@@ -74,6 +75,8 @@ typedef struct s_philo
 	int			philo_num;
 	int			eat_count;
 	long		eat_time;
+	t_status	stat;
+
 }	t_philo;
 
 typedef struct s_comb
@@ -95,11 +98,11 @@ void	init_processes(t_data *data, t_philo **philos);
 
 /*		actions				*/
 
-void	*routine(void *arg);
-bool	check_if_running(t_data *data);
-void	philo_eat(t_data *data, t_philo *philo);
-void	philo_sleep(t_data *data, t_philo *philo);
-void	philo_think(t_data *data, t_philo *philo);
+void		*routine(void *arg);
+bool		check_if_running(t_data *data);
+t_status	philo_eat(t_data *data, t_philo *philo);
+t_status	philo_sleep(t_data *data, t_philo *philo);
+void		philo_think(t_data *data, t_philo *philo);
 
 /*		utils				*/
 
@@ -112,8 +115,9 @@ void	sem_post_n(sem_t *sem, int times);
 
 /*		time functions		*/
 
-long	ft_get_time(void);
-void	ft_sleep(long ms_time);
-long	timestamp(t_data *data);
+long		ft_get_time(void);
+void		ft_sleep(long ms_time);
+t_status	ft_sleep_check(t_data *data, t_philo *philo, long ms_time);
+long		timestamp(t_data *data);
 
 #endif
