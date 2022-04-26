@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/16 22:23:30 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/21 19:19:06 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/26 17:35:42 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@
 # include <semaphore.h>
 # include <signal.h>
 # include <sys/wait.h>
-# include <stdatomic.h>
 
 # define BLUE "\033[38;5;36m"
 # define RED "\033[0;31m"
@@ -35,6 +34,7 @@
 
 typedef enum e_status
 {
+	ALIVE,
 	EAT,
 	SLEEP,
 	THINK,
@@ -42,14 +42,10 @@ typedef enum e_status
 	DEAD,
 	ATE_ENOUGH,
 	WRONG_ARGC,
-	WRONG_INTS
-}	t_status;
-
-typedef enum e_err
-{
+	WRONG_INTS,
 	MALLOC_FAIL,
 	WRONG_INPUT
-}	t_err;
+}	t_status;
 
 typedef struct s_data
 {
@@ -59,6 +55,7 @@ typedef struct s_data
 	long			sleep_time;
 	long			min_eat_count;
 	pthread_t		*threads_watch;
+	pid_t			*pids;
 	sem_t			*forks;
 	sem_t			**eat_time_locks;
 	sem_t			**eat_count_locks;
@@ -83,6 +80,7 @@ typedef struct s_comb
 {
 	t_data	*data;
 	t_philo	*philo;
+	// int		i;
 }	t_comb;
 
 void	reaper(t_data *data, t_philo **philos);
@@ -99,6 +97,7 @@ void	init_processes(t_data *data, t_philo **philos);
 /*		actions				*/
 
 void		*routine(void *arg);
+void		philo_routine(t_data *data, t_philo **philos, int i);
 bool		check_if_running(t_data *data);
 t_status	philo_eat(t_data *data, t_philo *philo);
 t_status	philo_sleep(t_data *data, t_philo *philo);
@@ -112,6 +111,7 @@ char	*ft_itoa(int n);
 void	print_status(t_data *data, t_philo *philo, t_status status);
 int		args_fail(t_status err);
 void	sem_post_n(sem_t *sem, int times);
+int		ft_exit(t_data **data, t_philo ***philos, t_status stat);
 
 /*		time functions		*/
 

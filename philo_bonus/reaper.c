@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/21 18:45:50 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/21 19:14:02 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/21 21:45:59 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,15 @@ void	*watch(void *arg)
 	data = comb->data;
 	philo = comb->philo;
 	free(comb);
-	waitpid(data->threads_watch[philo->philo_num - 1], &ret, 0);
+	printf("waiting on philo %i\n", philo->philo_num);
+	waitpid(data->pids[philo->philo_num - 1], &ret, 0);
+	printf("finished waiting on philo %i\n", philo->philo_num);
 	if ( WIFEXITED(ret) ) {
         const int es = WEXITSTATUS(ret);
-        printf("exit status was %d\n", es);
+        printf(RED"exit status was %d\n"RESET, es);
     }
-
+	printf(YELLOW"watch's end\n"RESET);
+	return (NULL);
 }
 
 void	reaper(t_data *data, t_philo **philos)
@@ -47,4 +50,5 @@ void	reaper(t_data *data, t_philo **philos)
 		pthread_create(&(data->threads_watch[i]), NULL, watch, comb);
 		i++;
 	}
+
 }

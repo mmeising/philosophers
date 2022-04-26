@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 23:37:08 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/21 18:31:18 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/21 19:52:15 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	sem_post_n(sem_t *sem, int n)
 	}
 }
 
-void	print_stat(t_data *data, t_philo *philo, t_status stat)
+void	print_status(t_data *data, t_philo *philo, t_status stat)
 {
 	// sem_wait(data->running_lock);
 	// if (data->running == false)

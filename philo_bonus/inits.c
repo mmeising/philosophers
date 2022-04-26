@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 22:08:22 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/21 19:19:34 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/21 20:20:32 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,9 @@
 void	init_data(t_data **data, char **argv)
 {
 	*data = (t_data *)ft_calloc(1, sizeof(**data));
+	printf("first malloc\n");
 	if (*data == NULL)
-		exit(MALLOC_FAIL);
+		exit(ft_exit(data, NULL, MALLOC_FAIL));
 	(*data)->philo_count = ft_atoi(argv[1]);
 	(*data)->die_time = ft_atoi(argv[2]);
 	(*data)->eat_time = ft_atoi(argv[3]);
@@ -33,10 +34,13 @@ void	init_data(t_data **data, char **argv)
 	(*data)->eat_count_locks = ft_calloc((*data)->philo_count, sizeof(sem_t *));
 	(*data)->eat_time_idents = ft_calloc((*data)->philo_count, sizeof(char *));
 	(*data)->eat_count_idents = ft_calloc((*data)->philo_count, sizeof(char *));
+	(*data)->pids = ft_calloc((*data)->philo_count, sizeof(pid_t));
+	printf("second mass of mallocs\n");
 	if ((*data)->threads_watch == NULL || (*data)->eat_time_locks == NULL
 		|| (*data)->eat_count_locks == NULL || (*data)->eat_time_idents == NULL
-		|| (*data)->eat_count_idents == NULL)
-		exit(MALLOC_FAIL);
+		|| (*data)->eat_count_idents == NULL || (*data)->pids == NULL)
+		exit(ft_exit(data, NULL, MALLOC_FAIL));
+	printf("second mallocs done\n");
 	// (*data)->running = true;
 }
 
@@ -46,16 +50,19 @@ void	init_philos(t_data *data, t_philo ***philos)
 
 	*philos = ft_calloc(data->philo_count, sizeof(t_philo *));
 	if (*philos == NULL)
-		exit(MALLOC_FAIL);
+		exit(ft_exit(&data, philos, MALLOC_FAIL));
+	printf("philos malloc done\n");
 	i = 0;
 	while (i < data->philo_count)
 	{
-		(*philos[i]) = ft_calloc(1, sizeof(t_philo));
+		(*philos)[i] = ft_calloc(1, sizeof(t_philo));
 		if ((*philos)[i] == NULL)
-			exit(MALLOC_FAIL);
+			exit(ft_exit(&data, philos, MALLOC_FAIL));
+		printf("philo[i] malloc done\n");
 		(*philos)[i]->philo_num = i + 1;
 		(*philos)[i]->eat_count = 0;
 		(*philos)[i]->eat_time = 0;
+		(*philos)[i]->stat = ALIVE;
 		i++;
 	}
 }
@@ -69,9 +76,11 @@ void	init_idents(t_data *data)
 	{
 		data->eat_time_idents[i] = ft_itoa(10001 + i);
 		data->eat_count_idents[i] = ft_itoa(20001 + i);
+		printf("idents mallocs\n");
 		if (data->eat_time_idents[i] == NULL
 			|| data->eat_count_idents[i] == NULL)
-			exit(MALLOC_FAIL);
+			exit(ft_exit(&data, NULL, MALLOC_FAIL));
+		printf("idents mallocs done\n");
 		i++;
 	}
 }
@@ -80,22 +89,23 @@ void	init_locks(t_data *data)
 {
 	int	i;
 
-	data->forks = sem_open("forks", O_CREAT, 00660, data->philo_count);
-	data->start_lock = sem_open("start_lock", O_CREAT, 00660, 0);
+	printf("philo count is %i\n", data->philo_count);
+	data->forks = sem_open("forks", O_CREAT, 0666, data->philo_count);
+	data->start_lock = sem_open("start_lock", O_CREAT, 00666, 0);
 	// data->running_lock = sem_open("running_lock", O_CREAT, 00660, 1);
 	if (data->forks == SEM_FAILED || data->start_lock == SEM_FAILED
 		/*|| data->running_lock == SEM_FAILED*/)
-		exit(SEM_FAILED);
+		exit(ft_exit(&data, NULL, *SEM_FAILED));
 	i = 0;
 	while (i < data->philo_count)
 	{
 		data->eat_time_locks[i] = sem_open(data->eat_time_idents[i],
-			O_CREAT, 00660, 1);
+			O_CREAT, 00666, 1);
 		data->eat_count_locks[i] = sem_open(data->eat_count_idents[i],
-			O_CREAT, 00660, 1);
-		if (data->eat_time_locks == SEM_FAILED
-			|| data->eat_count_locks == SEM_FAILED)
-			exit(SEM_FAILED);
+			O_CREAT, 00666, 1);
+		if (*(data->eat_time_locks) == SEM_FAILED
+			|| *(data->eat_time_locks) == SEM_FAILED)
+			exit(ft_exit(&data, NULL, *SEM_FAILED));
 		i++;
 	}
 }
@@ -107,11 +117,13 @@ void	init_processes(t_data *data, t_philo **philos)
 	i = 0;
 	while (i < data->philo_count)
 	{
-		data->threads_watch[i] = fork();
-		if (data->threads_watch[i] == 0)
+		printf("sending process number %i on its way\n", i);
+		data->pids[i] = fork();
+		if (data->pids[i] == 0)
 			philo_routine(data, philos, i);
 		i++;
 	}
 	data->ms_start = timestamp(data);//does order of timestamp and
 	sem_post(data->start_lock);//sem_post make a difference in timing?
+	printf("sem_post in init_processes called\n");
 }
