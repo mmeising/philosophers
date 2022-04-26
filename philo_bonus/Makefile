@@ -6,7 +6,7 @@
 #    By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/16 22:44:45 by mmeising          #+#    #+#              #
-#    Updated: 2022/04/26 17:31:29 by mmeising         ###   ########.fr        #
+#    Updated: 2022/04/27 00:55:32 by mmeising         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -59,8 +59,9 @@ fclean: clean
 
 re: fclean all
 
+#for some reason die_time = 1 does not work, waits eat_time before dying
 PHILO_COUNT := 2
-DIE_TIME := 50
+DIE_TIME := 200
 EAT_TIME := 100
 SLEEP_TIME := 100
 
@@ -72,3 +73,4 @@ debug: fclean
 	lldb $(NAME) $(PHILO_COUNT) $(DIE_TIME) $(EAT_TIME) $(SLEEP_TIME)
 
 .PHONY: all clean fclean re
+#reaper starts too soon, needs to wait with everything else. or time check is wrong.

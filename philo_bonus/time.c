@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 20:32:29 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/21 18:12:01 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/26 18:18:32 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ t_status	ft_sleep_check(t_data *data, t_philo *philo, long ms_time)
 		if (philo->eat_time + data->die_time < timestamp(data))
 		{
 			philo->stat = DEAD;
+			printf(RED"%li %i died. from sleepcheck\n"RESET, timestamp(data), philo->philo_num);
 			return (DEAD);
 		}
 		else

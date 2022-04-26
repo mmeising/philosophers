@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/16 22:23:30 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/26 17:35:42 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/27 00:53:18 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ typedef enum e_status
 	WRONG_ARGC,
 	WRONG_INTS,
 	MALLOC_FAIL,
+	SEM_FAIL,
 	WRONG_INPUT
 }	t_status;
 
@@ -63,8 +64,10 @@ typedef struct s_data
 	char			**eat_count_idents;
 	long			ms_start;
 	sem_t			*start_lock;
-	// bool			running;
-	// sem_t			running_lock;//starts at 1, wait/post for each print
+	bool			running;
+	sem_t			*running_lock;
+	int				ate_enough_count;
+	sem_t			*ate_lock;
 }	t_data;
 
 typedef struct s_philo
@@ -73,14 +76,17 @@ typedef struct s_philo
 	int			eat_count;
 	long		eat_time;
 	t_status	stat;
+	pthread_t	reaper_thread;
+	//bool		running;//maybe need these two for printf check
+	//sem_t		*running_lock;
 
 }	t_philo;
 
 typedef struct s_comb
 {
 	t_data	*data;
-	t_philo	*philo;
-	// int		i;
+	t_philo	**philos;
+	int		i;
 }	t_comb;
 
 void	reaper(t_data *data, t_philo **philos);
@@ -99,8 +105,8 @@ void	init_processes(t_data *data, t_philo **philos);
 void		*routine(void *arg);
 void		philo_routine(t_data *data, t_philo **philos, int i);
 bool		check_if_running(t_data *data);
-t_status	philo_eat(t_data *data, t_philo *philo);
-t_status	philo_sleep(t_data *data, t_philo *philo);
+void		philo_eat(t_data *data, t_philo *philo);
+void		philo_sleep(t_data *data, t_philo *philo);
 void		philo_think(t_data *data, t_philo *philo);
 
 /*		utils				*/
@@ -111,7 +117,10 @@ char	*ft_itoa(int n);
 void	print_status(t_data *data, t_philo *philo, t_status status);
 int		args_fail(t_status err);
 void	sem_post_n(sem_t *sem, int times);
-int		ft_exit(t_data **data, t_philo ***philos, t_status stat);
+int		ft_exit(t_data **data, t_philo ***philos, t_status stat, int i);
+sem_t	*wrapped_sem_open(const char *name, int count);
+void	ate_count_plus(t_data *data);
+void	philo_dead(t_data *data, t_philo **philos, int i);
 
 /*		time functions		*/
 
