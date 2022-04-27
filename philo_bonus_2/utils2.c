@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 21:13:09 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/28 00:57:57 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/28 01:06:12 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,3 @@ void	print_statement(t_data *data, t_philo *philo, t_status stat)
 	sem_post(data->running_lock);
 }
 
-void	ate_count_plus(t_data *data)
-{
-	sem_wait(data->ate_enough_lock);
-	data->ate_enough++;
-	sem_post(data->ate_enough_lock);
-}

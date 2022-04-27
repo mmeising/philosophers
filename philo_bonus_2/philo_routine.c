@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 22:05:30 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/28 00:52:04 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/28 01:04:55 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	*reaper_thread(void *arg)
 		if (data->min_eat)
 		{
 			sem_wait(philos[i]->eat_count_lock);
-			if (philos[i]->eat_count == data->min_eat)
+			if (philos[i]->eat_count >= data->min_eat)
 				ft_exit(&data, &philos, ATE_ENOUGH);
 			sem_post(philos[i]->eat_count_lock);
 		}

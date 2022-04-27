@@ -6,11 +6,18 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 22:05:02 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/28 00:32:28 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/28 01:06:32 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+void	ate_count_plus(t_data *data)
+{
+	sem_wait(data->ate_enough_lock);
+	data->ate_enough++;
+	sem_post(data->ate_enough_lock);
+}
 
 void	philo_died(t_data *data, t_philo **philos, int i)
 {

@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 20:23:08 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/28 00:30:47 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/28 01:08:47 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ void	save_input(t_data **data, char **argv)
 	(*data)->eat_time = ft_atoi(argv[3]);
 	(*data)->sleep_time = ft_atoi(argv[4]);
 	(*data)->ate_enough = 0;
+	(*data)->min_eat = 0;
 	if (argv[5])
-		(*data)->ate_enough = ft_atoi(argv[5]);
+		(*data)->min_eat = ft_atoi(argv[5]);
 }

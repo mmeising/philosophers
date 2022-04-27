@@ -6,7 +6,7 @@
 #    By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/27 20:04:24 by mmeising          #+#    #+#              #
-#    Updated: 2022/04/28 01:00:32 by mmeising         ###   ########.fr        #
+#    Updated: 2022/04/28 01:09:00 by mmeising         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -60,12 +60,12 @@ re: fclean all
 
 #20 199 100 100 sometimes gets stuck
 PHILO_COUNT := 20
-DIE_TIME := 190
+DIE_TIME := 500
 EAT_TIME := 100
 SLEEP_TIME := 100
 
 test: all
-	./philo $(PHILO_COUNT) $(DIE_TIME) $(EAT_TIME) $(SLEEP_TIME)
+	./philo $(PHILO_COUNT) $(DIE_TIME) $(EAT_TIME) $(SLEEP_TIME) 5
 
 debug: fclean
 	$(CC) -g $(CFLAGS) $(HEADER_FLAGS) $(SRCS) -o $(NAME)

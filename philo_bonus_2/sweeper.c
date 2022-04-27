@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/28 00:14:34 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/28 00:26:59 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/04/28 01:07:04 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	sweeper(t_data *data, t_philo **philos)
 		// printf("waited for philo %i\n", philos[i]->philo_num);
 		i++;
 	}
-	if (data->min_eat && data->ate_enough == data->min_eat)
+	if (data->min_eat && data->ate_enough == data->philo_count)
 		printf(GREEN"everyone ate enough\n"RESET);
 	sem_close_all(data, philos);
 }
