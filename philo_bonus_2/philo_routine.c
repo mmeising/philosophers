@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 22:05:30 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/28 01:04:55 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/05/01 23:00:48 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,18 @@ void	*reaper_thread(void *arg)
 		{
 			sem_wait(philos[i]->eat_count_lock);
 			if (philos[i]->eat_count >= data->min_eat)
+			{
+				// printf("philo %i ate enough and exit now\n"RESET, i + 1);//comment thing
 				ft_exit(&data, &philos, ATE_ENOUGH);
+			}
 			sem_post(philos[i]->eat_count_lock);
 		}
 		sem_wait(philos[i]->eat_time_lock);
 		if (philos[i]->eat_time + data->die_time < ft_timestamp(data))
+		{
+			// printf(RED"philo %i DIED, will exit now!\n"RESET, i + 1);
 			ft_exit(&data, &philos, DEAD);
+		}
 		sem_post(philos[i]->eat_time_lock);
 		usleep(500);
 	}

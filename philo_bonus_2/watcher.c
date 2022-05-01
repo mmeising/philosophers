@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 22:05:02 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/28 01:06:32 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/05/01 23:00:30 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,9 @@ void	philo_died(t_data *data, t_philo **philos, int i)
 {
 	int	j;
 
+	// printf(RED"philo %i died and i'm waiting on sema\n"RESET, i + 1);
 	sem_wait(data->running_lock);
+	// printf(RED"philo %i died and i finished waiting on sema\n"RESET, i + 1);
 	if (data->running == true)
 	{
 		printf(RED"%li %i died\n"RESET, ft_timestamp(data), philos[i]->philo_num);
@@ -48,7 +50,8 @@ void	*routine(void *arg)
 	int		exit_stat;
 
 	uncomb(&data, &philos, &i, arg);
-	waitpid(data->pids[i], &ret, 0);
+	if (waitpid(data->pids[i], &ret, 0) == -1)
+		ft_exit(&data, &philos, WAIT_FAIL);
 	if (WIFEXITED(ret))
 	{
 		exit_stat = WEXITSTATUS(ret);

@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 19:53:42 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/28 00:31:23 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/05/01 21:21:10 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@
 
 typedef enum e_status
 {
+	ALL_FINE,
 	DEAD,
 	ATE_ENOUGH,
 	WRONG_ARGC,
@@ -41,6 +42,7 @@ typedef enum e_status
 	MALLOC_FAIL,
 	SEM_FAIL,
 	THREAD_FAIL,
+	WAIT_FAIL,
 	FORK,
 	EAT,
 	SLEEP,

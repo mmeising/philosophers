@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 20:04:09 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/28 00:38:52 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/05/01 21:15:46 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,5 +29,5 @@ int	main(int argc, char **argv)
 	data->ms_start = ft_get_time();
 	sem_post(data->start_lock);
 	sweeper(data, philos);
-	ft_exit(&data, &philos, 0);
+	ft_exit(&data, &philos, ALL_FINE);
 }

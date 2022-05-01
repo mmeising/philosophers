@@ -6,7 +6,7 @@
 /*   By: mmeising <mmeising@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 21:13:09 by mmeising          #+#    #+#             */
-/*   Updated: 2022/04/28 01:06:12 by mmeising         ###   ########.fr       */
+/*   Updated: 2022/05/01 22:59:46 by mmeising         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ void	uncomb(t_data **data, t_philo ***philos, int *i, void *arg)
 
 void	print_statement(t_data *data, t_philo *philo, t_status stat)
 {
-	sem_wait(data->running_lock);
+	// sem_wait(data->running_lock);
+	// printf(PURPLE"WAITED\n"RESET);
 	if (stat == FORK)
 	{
 		printf("%li %i has taken a fork\n", ft_timestamp(data),
@@ -49,6 +50,7 @@ void	print_statement(t_data *data, t_philo *philo, t_status stat)
 	{
 		printf("%li %i is thinking\n", ft_timestamp(data), philo->philo_num);
 	}
-	sem_post(data->running_lock);
+	// sem_post(data->running_lock);
+	// printf(BLUE"POSTED\n"RESET);
 }
 
